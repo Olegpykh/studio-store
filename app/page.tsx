@@ -1,5 +1,4 @@
-// app/page.tsx
-
+import Header from "@/components/Header";
 import { shopifyFetch } from "../lib/shopify";
 import { GET_PRODUCTS } from "../lib/shopify-queries";
 import { ProductCard } from "@/components/ProductCard";
@@ -13,13 +12,17 @@ export default async function Home() {
   console.log("🔧 DEBUG: DOMAIN =", process.env.SHOPIFY_STORE_DOMAIN);
   console.log("🔧 DEBUG: TOKEN loaded =", !!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN);
 
-  let products = [];
+  let products: any[] = [];
   let error = null;
 
   try {
-    // Простой тест без variables
-    const data: any = await shopifyFetch(GET_PRODUCTS);
-    products = data?.products?.edges?.map((edge: any) => edge.node) || [];
+    const data: any = await shopifyFetch(GET_PRODUCTS, { first: 12 });
+    
+    products = data?.products?.edges
+      ?.map((edge: any) => edge.node)
+      ?.filter((product: any) => 
+        product.featuredImage?.url || product.images?.edges?.length > 0
+      ) || [];
   } catch (err) {
     error = err instanceof Error ? err.message : "Failed to fetch products";
     console.error("Error fetching products:", err);
@@ -28,12 +31,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b border-gray-200">
-        <nav className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-black">SportGear Store</h1>
-          <p className="mt-1 text-sm text-gray-600">Premium sports apparel engineered for performance</p>
-        </nav>
-      </header>
+      <Header />
 
       {/* Hero */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">

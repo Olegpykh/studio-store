@@ -1,28 +1,28 @@
 export function ProductCard({ product }: { product: any }) {
-    const image = product.images?.edges?.[0]?.node;
+    const image = product.featuredImage || product.images?.edges?.[0]?.node;
+  
+    if (!image?.url) {
+      return null; // полностью скрыть карточку без фото
+    }
+  
     const price = product.priceRange?.minVariantPrice;
   
     return (
-      <div className="group border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition">
+      <div className="group border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
         <div className="aspect-square bg-gray-100 relative">
-          {image ? (
-            <img 
-              src={image.url || image.src} 
-              alt={image.altText || product.title} 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-200">
-              No image
-            </div>
-          )}
+          <img 
+            src={image.url} 
+            alt={image.altText || product.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
         </div>
   
         <div className="p-4">
-          <h3 className="font-semibold text-lg">{product.title}</h3>
+          <h3 className="font-semibold text-lg line-clamp-2 mb-2">{product.title}</h3>
+          
           {price && (
-            <p className="text-xl font-bold mt-1">
-              {price.amount} {price.currencyCode}
+            <p className="text-2xl font-bold text-black">
+              {parseFloat(price.amount).toFixed(2)} {price.currencyCode}
             </p>
           )}
         </div>
