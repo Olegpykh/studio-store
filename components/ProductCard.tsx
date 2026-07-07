@@ -1,31 +1,44 @@
-export function ProductCard({ product }: { product: any }) {
-    const image = product.featuredImage || product.images?.edges?.[0]?.node;
-  
-    if (!image?.url) {
-      return null; // полностью скрыть карточку без фото
-    }
-  
-    const price = product.priceRange?.minVariantPrice;
-  
-    return (
-      <div className="group border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
-        <div className="aspect-square bg-gray-100 relative">
-          <img 
-            src={image.url} 
-            alt={image.altText || product.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+import Link from 'next/link';
+import { ShopifyProduct } from '@/types/shopify';
+
+export function ProductCard({ product }: { product: ShopifyProduct }) {
+  const productLink = product.handle ? `/products/${product.handle}` : '/';
+
+  return (
+    <Link href={productLink} className="group cursor-pointer block">
+      
+      <div className="overflow-hidden rounded-2xl bg-gray-50 aspect-square border border-gray-100 relative p-4 flex items-center justify-center">
+        {product.featuredImage?.url ? (
+          <img
+            src={product.featuredImage.url}
+            alt={product.featuredImage.altText || product.title}
+           
+            className="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300"
           />
-        </div>
-  
-        <div className="p-4">
-          <h3 className="font-semibold text-lg line-clamp-2 mb-2">{product.title}</h3>
-          
-          {price && (
-            <p className="text-2xl font-bold text-black">
-              {parseFloat(price.amount).toFixed(2)} {price.currencyCode}
-            </p>
-          )}
-        </div>
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-gray-400 text-sm">
+            No Image
+          </div>
+        )}
       </div>
-    );
-  }
+
+      <div className="mt-4">
+        {product.vendor && (
+          <span className="text-xs text-gray-400 uppercase font-bold tracking-wider block">
+            {product.vendor}
+          </span>
+        )}
+        <h4 className="font-bold text-base text-black mt-1 group-hover:text-gray-700 transition line-clamp-2 min-h-[3rem]">
+          {product.title}
+        </h4>
+        <p className="text-sm font-extrabold text-black mt-1">
+          {product.priceRange?.minVariantPrice?.amount
+            ? `${Number(product.priceRange.minVariantPrice.amount).toFixed(
+                2
+              )} ${product.priceRange.minVariantPrice.currencyCode}`
+            : 'View Details'}
+        </p>
+      </div>
+    </Link>
+  );
+}
