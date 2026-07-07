@@ -1,16 +1,19 @@
-// lib/shopify.ts
+const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+const token = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
-const domain = "sportgear-dev-store.myshopify.com";
-const token = "b119aaa21f1577d7e1d898bc2976fa10"; // Public token
+if (!domain || !token) {
+  throw new Error('❌ Shopify credentials are missing in .env.local');
+}
 
-export async function shopifyFetch(query: string, variables: any = {}) {
-  console.log("🔧 Fetching from Shopify:", domain);
-
+export async function shopifyFetch(
+  query: string,
+  variables: Record<string, string | number | boolean | null> = {}
+) {
   const response = await fetch(`https://${domain}/api/2025-07/graphql.json`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": token,
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': token!,
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -18,9 +21,11 @@ export async function shopifyFetch(query: string, variables: any = {}) {
   const json = await response.json();
 
   if (json.errors) {
-    console.error("Shopify GraphQL Errors:", json.errors);
-    throw new Error(json.errors[0]?.message || "GraphQL Error");
+    console.error('Shopify GraphQL Errors:', json.errors);
+    throw new Error(json.errors[0]?.message || 'GraphQL Error');
   }
 
   return json.data;
 }
+
+
