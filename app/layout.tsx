@@ -31,13 +31,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-white flex flex-col text-black selection:bg-black selection:text-white">
-        {/* Шапка теперь сквозная для всего сайта */}
         <Header />
 
-        {/* flex-1 заставит контент занимать все свободное место, прижимая футер к низу */}
         <div className="flex-1">{children}</div>
 
-        {/* Подвал тоже всегда на месте */}
         <Footer />
       </body>
     </html>

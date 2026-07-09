@@ -1,40 +1,10 @@
 // app/collections/[slug]/page.tsx
-
+import { GET_COLLECTION_BY_HANDLE } from '@/lib/shopify-queries';
 import { shopifyFetch } from '@/lib/shopify';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const GET_COLLECTION_BY_HANDLE = `
-  query GetCollectionByHandle($handle: String!) {
-    collectionByHandle(handle: $handle) {
-      id
-      title
-      description
-      products(first: 20) {
-        edges {
-          node {
-            id
-            title
-            handle
-            priceRange {
-              minVariantPrice {
-                amount
-              }
-            }
-            images(first: 1) {
-              edges {
-                node {
-                  src
-                  altText
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+
 
 interface Product {
   id: string;
@@ -105,14 +75,12 @@ export default async function CollectionPage({
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Back Button */}
       <div className="max-w-7xl mx-auto px-6 py-6">
         <Link href="/collections" className="text-blue-600 hover:underline">
           ← Back to Collections
         </Link>
       </div>
 
-      {/* Collection Header */}
       <section className="max-w-7xl mx-auto px-6 py-12 border-b border-gray-200">
         <h1 className="text-4xl font-bold mb-4">{collection.title}</h1>
         {collection.description && (
@@ -120,7 +88,6 @@ export default async function CollectionPage({
         )}
       </section>
 
-      {/* Products */}
       <section className="max-w-7xl mx-auto px-6 py-12">
         {products.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
