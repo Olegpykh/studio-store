@@ -8,7 +8,6 @@ export type ShopifyPrice = {
   currencyCode: string;
 };
 
-// 1. Добавляем тип для одного варианта товара (размер, цвет и т.д.)
 export type ShopifyProductVariant = {
   id: string;
   title: string;
@@ -16,13 +15,12 @@ export type ShopifyProductVariant = {
   priceV2: ShopifyPrice;
 };
 
-// 2. Прокачиваем основной тип продукта
 export type ShopifyProduct = {
   id: string;
   title: string;
   handle: string;
-  vendor?: string; // Добавили бренд/производителя
-  description: string; // Делаем обязательным (для страницы товара)
+  vendor?: string;
+  description?: string;
   featuredImage?: ShopifyImage;
   images?: {
     edges: Array<{
@@ -30,10 +28,8 @@ export type ShopifyProduct = {
     }>;
   };
   priceRange: {
-    // Делаем обязательным, чтобы не писать везде проверки `?`
     minVariantPrice: ShopifyPrice;
   };
-  // Добавляем список вариантов (опций) товара для детальной страницы
   variants?: {
     edges: Array<{
       node: ShopifyProductVariant;
@@ -41,7 +37,6 @@ export type ShopifyProduct = {
   };
 };
 
-// Тип для ответа запроса списка товаров (то, что на главной)
 export type ProductsQuery = {
   products: {
     edges: Array<{
@@ -50,7 +45,25 @@ export type ProductsQuery = {
   };
 };
 
-// 3. Добавляем тип для ответа запроса ОДНОГО товара по хэндлу
 export type SingleProductQuery = {
   product: ShopifyProduct | null;
+};
+
+export type ShopifyCollection = {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  image?: {
+    url: string;
+    altText?: string;
+  };
+};
+
+export type CollectionsQuery = {
+  collections: {
+    edges: Array<{
+      node: ShopifyCollection;
+    }>;
+  };
 };

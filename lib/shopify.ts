@@ -1,31 +1,47 @@
-const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
-const token = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
-
-if (!domain || !token) {
-  throw new Error('❌ Shopify credentials are missing in .env.local');
+interface GraphQLResponse<T> {
+  data: T;
+  errors?: Array<{
+    message: string;
+  }>;
 }
 
-export async function shopifyFetch(
+export async function shopifyFetch<T>(
   query: string,
-  variables: Record<string, string | number | boolean | null> = {}
-) {
-  const response = await fetch(`https://${domain}/api/2025-07/graphql.json`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': token!,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+  variables: Record<string, unknown> = {}
+): Promise<T> {
+  const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+  const endpoint = domain ? `https://${domain}/api/2024-01/graphql.json` : '';
+  const key = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
-  const json = await response.json();
-
-  if (json.errors) {
-    console.error('Shopify GraphQL Errors:', json.errors);
-    throw new Error(json.errors[0]?.message || 'GraphQL Error');
+  if (!endpoint || !key) {
+    throw new Error(
+      'Shopify API URL or Access Token is missing in environment variables.'
+    );
   }
 
-  return json.data;
+  try {
+    const result = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': key,
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+      next: { revalidate: 60 },
+    });
+
+    const json = (await result.json()) as GraphQLResponse<T>;
+
+    if (json.errors) {
+      throw new Error(`Shopify API Error: ${json.errors[0].message}`);
+    }
+
+    return json.data;
+  } catch (error) {
+    console.error('Error in shopifyFetch:', error);
+    throw error;
+  }
 }
-
-

@@ -20,11 +20,9 @@ export default function Header() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    // Redirecting to search results page with encoding
     window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
   };
 
-  // Global marketplace categories
   const categories = [
     { name: 'Electronics & Gadgets', href: '/collections/electronics' },
     { name: 'Clothing & Apparel', href: '/collections/apparel' },

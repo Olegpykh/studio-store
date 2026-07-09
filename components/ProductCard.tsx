@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ShopifyProduct } from '@/types/shopify';
 
 export function ProductCard({ product }: { product: ShopifyProduct }) {
@@ -6,14 +7,14 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
 
   return (
     <Link href={productLink} className="group cursor-pointer block">
-      
       <div className="overflow-hidden rounded-2xl bg-gray-50 aspect-square border border-gray-100 relative p-4 flex items-center justify-center">
         {product.featuredImage?.url ? (
-          <img
+          <Image
             src={product.featuredImage.url}
             alt={product.featuredImage.altText || product.title}
-           
-            className="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            className="p-4 object-contain group-hover:scale-105 transition duration-300"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-gray-400 text-sm">

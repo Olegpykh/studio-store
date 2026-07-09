@@ -1,19 +1,17 @@
 import { shopifyFetch } from '../lib/shopify';
 import { GET_PRODUCTS } from '../lib/shopify-queries';
 import { ProductCard } from '@/components/ProductCard';
-import { ShopifyProduct } from '@/types/shopify';
+import { ShopifyProduct, ProductsQuery } from '@/types/shopify';
 
-// 1. Выносим логику получения и очистки данных в отдельную функцию
 async function getProducts(): Promise<ShopifyProduct[]> {
   try {
-    const data = await shopifyFetch(GET_PRODUCTS, {
+    const data = await shopifyFetch<ProductsQuery>(GET_PRODUCTS, {
       first: 100,
       sortKey: 'TITLE',
     });
 
-    // Очищаем матрешку Shopify и возвращаем плоский массив товаров с картинками
     return (data?.products?.edges || [])
-      .map((edge: { node: ShopifyProduct }) => edge.node)
+      .map((edge) => edge.node)
       .filter((product: ShopifyProduct) =>
         Boolean(product.featuredImage?.url || product.images?.edges?.length)
       );
@@ -29,10 +27,8 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-white text-black selection:bg-black selection:text-white">
-      {/* Universal Premium Hero Section */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="relative rounded-3xl bg-gradient-to-r from-gray-900 via-black to-gray-900 px-8 py-20 shadow-2xl text-center sm:px-16 sm:py-28 overflow-hidden">
-          {/* Subtle background grid pattern */}
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
           <div className="relative max-w-3xl mx-auto z-10">
@@ -59,7 +55,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Quick Marketplace Categories Grid */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
@@ -99,7 +94,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Universal Products Section */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-12 border-b border-gray-100 pb-6">
           <div>

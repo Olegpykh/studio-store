@@ -4,9 +4,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-gray-100 bg-black text-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        {/* Верхняя часть: Сетка с навигацией и подпиской */}
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4 lg:gap-8 pb-12 border-b border-gray-800">
-          {/* Колонка 1: О бренде */}
           <div className="md:col-span-1">
             <span className="text-xl font-extrabold tracking-tight">
               SPORTGEAR
@@ -17,7 +15,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Колонка 2: Магазин */}
           <div>
             <h4 className="text-sm font-semibold text-gray-200 tracking-wider uppercase">
               Shop
@@ -47,7 +44,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Колонка 3: Помощь */}
           <div>
             <h4 className="text-sm font-semibold text-gray-200 tracking-wider uppercase">
               Support
@@ -71,7 +67,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Колонка 4: Рассылка */}
           <div className="md:col-span-1">
             <h4 className="text-sm font-semibold text-gray-200 tracking-wider uppercase">
               Stay Updated
@@ -79,10 +74,7 @@ export default function Footer() {
             <p className="mt-4 text-sm text-gray-400">
               Subscribe to get special offers and updates.
             </p>
-            <form
-              className="mt-4 flex max-w-md gap-2"
-             
-            >
+            <form className="mt-4 flex max-w-md gap-2">
               <input
                 type="email"
                 required
@@ -96,7 +88,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Нижняя часть: Копирайт и Юридические ссылки */}
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
             © {new Date().getFullYear()} SportGear Store. All rights reserved.
