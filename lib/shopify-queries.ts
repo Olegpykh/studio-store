@@ -102,3 +102,87 @@ export const GET_COLLECTION_BY_HANDLE = `
     }
   }
 `;
+
+
+export const GET_COLLECTION_PRODUCTS = `
+  query getCollectionProducts($handle: String!, $first: Int!) {
+    collection(handle: $handle) {
+      title
+      description
+      products(first: $first) {
+        edges {
+          node {
+            id
+            title
+            handle
+            description
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            featuredImage {
+              url
+              altText
+              width
+              height
+            }
+            images(first: 4) {
+              edges {
+                node {
+                  url
+                  altText
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_COLLECTIONS = `
+  {
+    collections(first: 10) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          image {
+            url
+            altText
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ALL_PRODUCTS_QUERY = `
+  query GetAllProducts($first: Int!) {
+    products(first: $first) {
+      edges {
+        node {
+          id
+          title
+          handle
+          vendor
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          featuredImage {
+            url
+            altText
+          }
+        }
+      }
+    }
+  }
+`;

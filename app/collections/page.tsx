@@ -2,25 +2,8 @@ import { shopifyFetch } from '@/lib/shopify';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CollectionsQuery, ShopifyCollection } from '@/types/shopify';
+import { GET_COLLECTIONS } from '@/lib/shopify-queries';
 
-const GET_COLLECTIONS = `
-  {
-    collections(first: 10) {
-      edges {
-        node {
-          id
-          title
-          handle
-          description
-          image {
-            url
-            altText
-          }
-        }
-      }
-    }
-  }
-`;
 
 export const metadata = {
   title: 'Collections | SportGear Store',

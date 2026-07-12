@@ -67,3 +67,15 @@ export type CollectionsQuery = {
     }>;
   };
 };
+
+export type CollectionQueryResponse = {
+  collection: {
+    title: string;
+    description: string;
+    products: {
+      edges: Array<{
+        node: ShopifyProduct;
+      }>;
+    };
+  } | null;
+};
