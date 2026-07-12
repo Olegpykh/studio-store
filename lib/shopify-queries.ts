@@ -186,3 +186,32 @@ export const GET_ALL_PRODUCTS_QUERY = `
     }
   }
 `;
+
+export const SEARCH_PRODUCTS_QUERY = `
+  query searchProducts($query: String!) {
+    products(first: 24, query: $query) {
+      edges {
+        node {
+          id
+          title
+          handle
+          vendor
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          images(first: 1) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

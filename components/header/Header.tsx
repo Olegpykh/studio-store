@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; 
 import { ShoppingCart, User, Search, ChevronDown, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState } from 'react'; 
 import { navigationConfig } from './config';
 import { DesktopMenu } from './DesktopMenu';
 import { MobileMenu } from './MobileMenu';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const router = useRouter();
@@ -18,7 +18,11 @@ export default function Header() {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
-    router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    const currentQuery = searchQuery;
+
+    setSearchQuery('');
+
+    router.push(`/search?q=${encodeURIComponent(currentQuery)}`);
   };
 
   const toggleDropdown = (trigger: string) => {
@@ -74,24 +78,27 @@ export default function Header() {
             ))}
           </nav>
 
-          <form
-            onSubmit={handleSearchSubmit}
-            className="flex-1 max-w-xs mx-4 hidden lg:block relative"
-          >
-            <input
-              type="text"
-              placeholder="Search products & collections..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent border-b border-gray-200 py-1.5 text-xs font-medium tracking-wide focus:border-black focus:outline-none transition-colors text-black placeholder-gray-400"
-            />
-            <button
-              type="submit"
-              className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors"
+          <div className="hidden lg:flex items-center justify-end flex-1 max-w-xs mx-4">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="relative flex items-center group w-full justify-end"
             >
-              <Search className="w-3.5 h-3.5" />
-            </button>
-          </form>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-0 opacity-0 focus:w-full focus:opacity-100 group-hover:w-full group-hover:opacity-100 bg-transparent border-b border-gray-200 py-1 text-xs font-medium tracking-wide focus:border-black focus:outline-none transition-all duration-300 text-black placeholder-gray-400 absolute right-0 pr-6"
+              />
+              <button
+                type="submit"
+                className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors z-10"
+                aria-label="Search"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+            </form>
+          </div>
 
           <div className="flex items-center gap-1 shrink-0">
             <button className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors lg:hidden">
