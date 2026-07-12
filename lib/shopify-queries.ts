@@ -202,7 +202,7 @@ export const SEARCH_PRODUCTS_QUERY = `
               currencyCode
             }
           }
-          images(first: 1) {
+          images(first: 5) {
             edges {
               node {
                 url
