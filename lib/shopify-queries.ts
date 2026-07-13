@@ -215,3 +215,94 @@ export const SEARCH_PRODUCTS_QUERY = `
     }
   }
 `;
+
+const CART_FRAGMENT = `
+  id
+  checkoutUrl
+  totalQuantity
+  lines(first: 100) {
+    edges {
+      node {
+        id
+        quantity
+        merchandise {
+          ... on ProductVariant {
+            id
+            title
+            price {
+              amount
+              currencyCode
+            }
+            product {
+              title
+              handle
+              vendor
+              featuredImage {
+                url
+                altText
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  cost {
+    totalAmount {
+      amount
+      currencyCode
+    }
+    subtotalAmount {
+      amount
+      currencyCode
+    }
+  }
+`;
+
+export const CREATE_CART_MUTATION = `
+  mutation createCart($input: CartInput!) {
+    cartCreate(input: $input) {
+      cart {
+        ${CART_FRAGMENT}
+      }
+    }
+  }
+`;
+
+export const ADD_TO_CART_MUTATION = `
+  mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart {
+        ${CART_FRAGMENT}
+      }
+    }
+  }
+`;
+
+export const UPDATE_CART_LINES_MUTATION = `
+  mutation updateCartLines($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+    cartLinesUpdate(cartId: $cartId, lines: $lines) {
+      cart {
+        ${CART_FRAGMENT}
+      }
+    }
+  }
+`;
+
+export const REMOVE_FROM_CART_MUTATION = `
+  mutation removeFromCart($cartId: ID!, $lineIds: [ID!]!) {
+    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+      cart {
+        ${CART_FRAGMENT}
+      }
+    }
+  }
+`;
+
+export const GET_CART_QUERY = `
+  query getCart($cartId: ID!) {
+    cart(id: $cartId) {
+      ${CART_FRAGMENT}
+    }
+  }
+`;
