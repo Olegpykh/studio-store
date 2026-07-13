@@ -1,5 +1,5 @@
 import { shopifyFetch } from '@/lib/shopify';
-import { ProductsQuery, ShopifyProduct } from '@/types/shopify';
+import { ProductsQuery} from '@/types/shopify';
 import { ProductGrid } from '@/components/ProductGrid';
 import { GET_ALL_PRODUCTS_QUERY } from '@/lib/shopify-queries';
 

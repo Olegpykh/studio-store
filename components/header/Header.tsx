@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { ShoppingCart, User, Search, ChevronDown, Menu, X } from 'lucide-react';
-import { useState } from 'react'; 
+import { useState } from 'react';
 import { navigationConfig } from './config';
 import { DesktopMenu } from './DesktopMenu';
 import { MobileMenu } from './MobileMenu';
 import { useRouter } from 'next/navigation';
+import { useCart } from '@/hooks/useCart'; 
 
 export default function Header() {
   const router = useRouter();
@@ -14,14 +15,14 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const totalQuantity = useCart((state) => state.totalQuantity);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
     const currentQuery = searchQuery;
-
     setSearchQuery('');
-
     router.push(`/search?q=${encodeURIComponent(currentQuery)}`);
   };
 
@@ -107,12 +108,19 @@ export default function Header() {
             <button className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors flex items-center justify-center">
               <User className="w-4 h-4" />
             </button>
-            <button className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors relative flex items-center justify-center">
+
+            <Link
+              href="/cart"
+              className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors relative flex items-center justify-center"
+            >
               <ShoppingCart className="w-4 h-4" />
-              <span className="absolute top-1 right-1 bg-black text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center ring-2 ring-white">
-                0
-              </span>
-            </button>
+              {totalQuantity > 0 && (
+                <span className="absolute top-1 right-1 bg-black text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center ring-2 ring-white animate-fade-in">
+                  {totalQuantity}
+                </span>
+              )}
+            </Link>
+
             <button
               className="md:hidden p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors"
               onClick={() => {
