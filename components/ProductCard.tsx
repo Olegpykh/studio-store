@@ -53,9 +53,9 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
   return (
     <Link
       href={productLink}
-      className="group cursor-pointer block tracking-tight"
+      className="group cursor-pointer block tracking-tight text-foreground"
     >
-      <div className="overflow-hidden rounded-2xl bg-[#fafafa] border border-gray-100/70 aspect-square relative flex items-center justify-center transition-all duration-500 group-hover:bg-white group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.02)] group-hover:border-gray-200/60">
+      <div className="overflow-hidden rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/80 aspect-square relative flex items-center justify-center transition-all duration-500 group-hover:bg-background dark:group-hover:bg-zinc-900 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.02)] dark:group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] group-hover:border-zinc-300 dark:group-hover:border-zinc-700">
         {hasImages ? (
           <>
             <div className="relative w-full h-full p-6 transition-transform duration-700 ease-out group-hover:scale-[1.02]">
@@ -73,14 +73,14 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
               <>
                 <button
                   onClick={prevImage}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-gray-100 text-black opacity-0 group-hover:opacity-100 hover:bg-white active:scale-90 transition-all duration-300 z-10"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-zinc-200/50 dark:border-zinc-800 text-foreground opacity-0 group-hover:opacity-100 hover:bg-white dark:hover:bg-zinc-800 active:scale-90 transition-all duration-300 z-10 cursor-pointer"
                   aria-label="Previous image"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={nextImage}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-gray-100 text-black opacity-0 group-hover:opacity-100 hover:bg-white active:scale-90 transition-all duration-300 z-10"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-zinc-200/50 dark:border-zinc-800 text-foreground opacity-0 group-hover:opacity-100 hover:bg-white dark:hover:bg-zinc-800 active:scale-90 transition-all duration-300 z-10 cursor-pointer"
                   aria-label="Next image"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -92,8 +92,8 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
                       key={idx}
                       className={`h-[2px] transition-all duration-300 rounded-full ${
                         idx === currentImgIndex
-                          ? 'w-4 bg-black'
-                          : 'w-1.5 bg-gray-300'
+                          ? 'w-4 bg-foreground'
+                          : 'w-1.5 bg-zinc-300 dark:bg-zinc-700'
                       }`}
                     />
                   ))}
@@ -102,7 +102,7 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
             )}
           </>
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-gray-300 text-[10px] font-bold uppercase tracking-widest">
+          <div className="flex h-full w-full items-center justify-center text-zinc-300 dark:text-zinc-600 text-[10px] font-bold uppercase tracking-widest">
             No Image
           </div>
         )}
@@ -110,19 +110,21 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
 
       <div className="mt-5 space-y-1 px-1">
         {product.vendor && (
-          <span className="text-[10px] text-gray-400 uppercase font-bold tracking-[0.15em] block">
+          <span className="text-[10px] text-gray-400 dark:text-zinc-500 uppercase font-bold tracking-[0.15em] block">
             {product.vendor}
           </span>
         )}
 
-        <h4 className="font-medium text-sm text-black group-hover:text-gray-500 transition-colors duration-300 line-clamp-2 min-h-[2.5rem] leading-snug">
+        <h4 className="font-medium text-sm text-foreground group-hover:text-gray-500 dark:group-hover:text-zinc-400 transition-colors duration-300 line-clamp-2 min-h-[2.5rem] leading-snug">
           {product.title}
         </h4>
 
         <div className="pt-1 flex items-center justify-between">
-          <p className="text-sm font-bold text-black tracking-wide">{price}</p>
+          <p className="text-sm font-bold text-foreground tracking-wide">
+            {price}
+          </p>
 
-          <span className="text-xs text-black opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 font-light">
+          <span className="text-xs text-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 font-light">
             →
           </span>
         </div>

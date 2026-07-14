@@ -8,6 +8,7 @@ import { DesktopMenu } from './DesktopMenu';
 import { MobileMenu } from './MobileMenu';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart'; 
+import { ThemeToggle } from '@/components/ThemeToggle'; 
 
 export default function Header() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 text-black tracking-tight">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border text-foreground tracking-tight transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 gap-8">
           <Link
@@ -42,16 +43,14 @@ export default function Header() {
               setIsMenuOpen(false);
             }}
           >
-            <div className="w-9 h-9 bg-black rounded-lg flex items-center justify-center transition-transform group-hover:scale-95 duration-300">
-              <span className="text-white font-black text-xl tracking-tighter">
-                S
-              </span>
+            <div className="w-9 h-9 bg-foreground text-background rounded-lg flex items-center justify-center transition-transform group-hover:scale-95 duration-300">
+              <span className="font-black text-xl tracking-tighter">S</span>
             </div>
             <div>
-              <h1 className="font-black text-lg tracking-widest leading-none uppercase">
+              <h1 className="font-black text-lg tracking-widest leading-none uppercase text-foreground">
                 STUDIO STORE
               </h1>
-              <p className="text-[8px] text-gray-400 tracking-[0.25em] uppercase mt-1 font-bold">
+              <p className="text-[8px] text-gray-400 dark:text-zinc-500 tracking-[0.25em] uppercase mt-1 font-bold">
                 Curated Est. 2026
               </p>
             </div>
@@ -64,8 +63,8 @@ export default function Header() {
                   onClick={() => toggleDropdown(cat.trigger)}
                   className={`flex items-center gap-1.5 py-2 text-xs font-bold tracking-[0.15em] uppercase transition-colors ${
                     activeDropdown === cat.trigger
-                      ? 'text-gray-400'
-                      : 'text-black hover:text-gray-500'
+                      ? 'text-gray-400 dark:text-zinc-500'
+                      : 'text-foreground hover:text-gray-500 dark:hover:text-zinc-400'
                   }`}
                 >
                   <span>{cat.title}</span>
@@ -89,11 +88,11 @@ export default function Header() {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-0 opacity-0 focus:w-full focus:opacity-100 group-hover:w-full group-hover:opacity-100 bg-transparent border-b border-gray-200 py-1 text-xs font-medium tracking-wide focus:border-black focus:outline-none transition-all duration-300 text-black placeholder-gray-400 absolute right-0 pr-6"
+                className="w-0 opacity-0 focus:w-full focus:opacity-100 group-hover:w-full group-hover:opacity-100 bg-transparent border-b border-border py-1 text-xs font-medium tracking-wide focus:border-foreground focus:outline-none transition-all duration-300 text-foreground placeholder-gray-400 dark:placeholder-zinc-600 absolute right-0 pr-6"
               />
               <button
                 type="submit"
-                className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors z-10"
+                className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors z-10 cursor-pointer"
                 aria-label="Search"
               >
                 <Search className="w-4 h-4" />
@@ -102,27 +101,30 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-1 shrink-0">
-            <button className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors lg:hidden">
+            <button className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors lg:hidden cursor-pointer">
               <Search className="w-4 h-4" />
             </button>
-            <button className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors flex items-center justify-center">
+
+            <button className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors flex items-center justify-center cursor-pointer">
               <User className="w-4 h-4" />
             </button>
 
+            <ThemeToggle />
+
             <Link
               href="/cart"
-              className="p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors relative flex items-center justify-center"
+              className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors relative flex items-center justify-center"
             >
               <ShoppingCart className="w-4 h-4" />
               {totalQuantity > 0 && (
-                <span className="absolute top-1 right-1 bg-black text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center ring-2 ring-white animate-fade-in">
+                <span className="absolute top-1 right-1 bg-foreground text-background text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center ring-2 ring-background animate-fade-in">
                   {totalQuantity}
                 </span>
               )}
             </Link>
 
             <button
-              className="md:hidden p-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors"
+              className="md:hidden p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors cursor-pointer"
               onClick={() => {
                 setIsMenuOpen(!isMenuOpen);
                 setActiveDropdown(null);

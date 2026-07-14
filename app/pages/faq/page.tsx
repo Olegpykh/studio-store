@@ -19,25 +19,25 @@ export default function FAQPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white text-black selection:bg-black selection:text-white pt-12 pb-24">
+    <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background pt-12 pb-24 transition-colors duration-300">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <div className="mb-12">
           <Link
             href="/"
-            className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors"
+            className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-zinc-500 hover:text-foreground dark:hover:text-white transition-colors"
           >
             <span className="mr-2">←</span> Back to Home
           </Link>
         </div>
 
         <div className="text-center space-y-3 mb-20">
-          <span className="text-[10px] font-bold text-gray-400 tracking-[0.25em] uppercase block">
+          <span className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 tracking-[0.25em] uppercase block">
             Assistance & Longevity
           </span>
-          <h1 className="text-4xl font-extrabold uppercase tracking-tight text-black sm:text-5xl">
+          <h1 className="text-4xl font-extrabold uppercase tracking-tight text-foreground sm:text-5xl">
             FAQ & Care
           </h1>
-          <p className="text-sm text-gray-500 font-light max-w-md mx-auto leading-relaxed">
+          <p className="text-sm text-gray-500 dark:text-zinc-400 font-light max-w-md mx-auto leading-relaxed">
             Everything you need to know about our exclusive drops and preserving
             the quality of your premium goods.
           </p>
@@ -46,14 +46,14 @@ export default function FAQPage() {
         <div className="space-y-16">
           {FAQ_CATEGORIES.map((category, catIdx) => (
             <div key={catIdx} className="space-y-6">
-              <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+              <div className="flex items-center gap-3 border-b border-border pb-4">
                 {category.icon}
-                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-black">
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-foreground">
                   {category.title}
                 </h2>
               </div>
 
-              <div className="divide-y divide-gray-100/60">
+              <div className="divide-y divide-border">
                 {category.items.map((item, itemIdx) => {
                   const itemId = `${catIdx}-${itemIdx}`;
                   const isOpen = openIndex === itemId;
@@ -62,15 +62,17 @@ export default function FAQPage() {
                     <div key={itemIdx} className="py-5 first:pt-0 last:pb-0">
                       <button
                         onClick={() => toggleAccordion(itemId)}
-                        className="flex w-full items-center justify-between text-left group"
+                        className="flex w-full items-center justify-between text-left group cursor-pointer"
                         aria-expanded={isOpen}
                       >
-                        <span className="text-base font-medium text-black group-hover:text-gray-500 transition-colors duration-300 leading-snug pr-4">
+                        <span className="text-base font-medium text-foreground group-hover:text-gray-500 dark:group-hover:text-zinc-400 transition-colors duration-300 leading-snug pr-4">
                           {item.question}
                         </span>
                         <span
-                          className={`transform transition-transform duration-500 shrink-0 p-1 text-gray-400 group-hover:text-black ${
-                            isOpen ? 'rotate-180 text-black' : ''
+                          className={`transform transition-transform duration-500 shrink-0 p-1 text-gray-400 dark:text-zinc-500 group-hover:text-foreground ${
+                            isOpen
+                              ? 'rotate-180 text-foreground dark:text-white'
+                              : ''
                           }`}
                         >
                           <ChevronDown className="w-4 h-4 stroke-[1.5]" />
@@ -78,7 +80,7 @@ export default function FAQPage() {
                       </button>
 
                       <div
-                        className={`grid transition-all duration-500 ease-in-out overflow-hidden text-sm text-gray-500 font-light leading-relaxed ${
+                        className={`grid transition-all duration-500 ease-in-out overflow-hidden text-sm text-gray-500 dark:text-zinc-400 font-light leading-relaxed ${
                           isOpen
                             ? 'grid-rows-[1fr] opacity-100 mt-3'
                             : 'grid-rows-[0fr] opacity-0'
@@ -95,18 +97,19 @@ export default function FAQPage() {
             </div>
           ))}
         </div>
+
         <div
           id="concierge-section"
-          className="mt-24 p-8 sm:p-12 rounded-3xl bg-[#fafafa] border border-gray-100/70 space-y-8 transition-all duration-500"
+          className="mt-24 p-8 sm:p-12 rounded-3xl bg-zinc-50 dark:bg-zinc-900/40 border border-border space-y-8 transition-all duration-500"
         >
           <div className="text-center space-y-3">
-            <p className="text-xs font-bold uppercase tracking-[0.15em] text-black">
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-foreground">
               Still have questions?
             </p>
-            <h3 className="text-xl font-extrabold uppercase tracking-tight text-black">
+            <h3 className="text-xl font-extrabold uppercase tracking-tight text-foreground">
               Digital Concierge Service
             </h3>
-            <p className="text-sm text-gray-500 font-light max-w-sm mx-auto leading-relaxed">
+            <p className="text-sm text-gray-500 dark:text-zinc-400 font-light max-w-sm mx-auto leading-relaxed">
               Our premium team is online. Drop your details below for immediate
               assistance with orders, sizing, or care.
             </p>
@@ -114,18 +117,21 @@ export default function FAQPage() {
 
           {isSent ? (
             <div className="max-w-md mx-auto text-center py-12 space-y-4 animate-in fade-in zoom-in-95 duration-500">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-black text-white mb-2 shadow-sm">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-foreground text-background mb-2 shadow-sm">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
-              <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-black">
+              <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground">
                 Request Received
               </h4>
-              <p className="text-xs text-gray-500 font-light max-w-xs mx-auto leading-relaxed">
+              <p className="text-xs text-gray-500 dark:text-zinc-400 font-light max-w-xs mx-auto leading-relaxed">
                 Thank you,{' '}
-                <span className="font-semibold text-black">{name}</span>. Your
-                inquiry has been routed to our digital concierge desk. A
+                <span className="font-semibold text-foreground">{name}</span>.
+                Your inquiry has been routed to our digital concierge desk. A
                 confirmation ticket has been sent to{' '}
-                <span className="text-gray-700">{email}</span>.
+                <span className="text-gray-700 dark:text-zinc-300 font-normal">
+                  {email}
+                </span>
+                .
               </p>
               <button
                 onClick={() => {
@@ -135,7 +141,7 @@ export default function FAQPage() {
                   setSubject('Sizing & Fit Advice');
                   setMessage('');
                 }}
-                className="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 pt-4 hover:text-gray-500 hover:border-gray-400 transition-colors"
+                className="text-[10px] font-bold uppercase tracking-widest border-b border-foreground pb-0.5 pt-4 hover:text-gray-500 dark:hover:text-zinc-400 hover:border-gray-400 transition-colors cursor-pointer"
               >
                 Send another message
               </button>
@@ -150,7 +156,7 @@ export default function FAQPage() {
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 px-1">
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1.5 px-1">
                     Name
                   </label>
                   <input
@@ -159,11 +165,11 @@ export default function FAQPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Alexander"
-                    className="w-full h-12 px-4 rounded-xl border border-gray-200/80 bg-white text-sm font-light focus:outline-none focus:border-black transition-colors placeholder:text-gray-300 text-black"
+                    className="w-full h-12 px-4 rounded-xl border border-border bg-background text-sm font-light focus:outline-none focus:border-foreground transition-colors placeholder:text-gray-300 dark:placeholder:text-zinc-600 text-foreground"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 px-1">
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1.5 px-1">
                     Email
                   </label>
                   <input
@@ -172,19 +178,19 @@ export default function FAQPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="alex@luxury.com"
-                    className="w-full h-12 px-4 rounded-xl border border-gray-200/80 bg-white text-sm font-light focus:outline-none focus:border-black transition-colors placeholder:text-gray-300 text-black"
+                    className="w-full h-12 px-4 rounded-xl border border-border bg-background text-sm font-light focus:outline-none focus:border-foreground transition-colors placeholder:text-gray-300 dark:placeholder:text-zinc-600 text-foreground"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 px-1">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1.5 px-1">
                   Subject
                 </label>
                 <select
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-gray-200/80 bg-white text-sm font-light focus:outline-none focus:border-black transition-colors text-gray-700"
+                  className="w-full h-12 px-4 rounded-xl border border-border bg-background text-sm font-light focus:outline-none focus:border-foreground transition-colors text-foreground [&>option]:bg-background [&>option]:text-foreground"
                 >
                   <option>Sizing & Fit Advice</option>
                   <option>Order & Shipping Status</option>
@@ -194,7 +200,7 @@ export default function FAQPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5 px-1">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1.5 px-1">
                   Message
                 </label>
                 <textarea
@@ -203,13 +209,13 @@ export default function FAQPage() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="How can our concierge assist you today?"
-                  className="w-full p-4 rounded-xl border border-gray-200/80 bg-white text-sm font-light focus:outline-none focus:border-black transition-colors placeholder:text-gray-300 resize-none text-black"
+                  className="w-full p-4 rounded-xl border border-border bg-background text-sm font-light focus:outline-none focus:border-foreground transition-colors placeholder:text-gray-300 dark:placeholder:text-zinc-600 resize-none text-foreground leading-relaxed"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full h-12 bg-black text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-xl flex items-center justify-center gap-2 hover:bg-gray-800 active:scale-[0.98] transition-all shadow-sm"
+                className="w-full h-12 bg-foreground text-background text-[10px] font-bold uppercase tracking-[0.2em] rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
               >
                 <Send className="w-3.5 h-3.5" />
                 Send Request
