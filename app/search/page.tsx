@@ -6,7 +6,6 @@ import { Search, Loader2 } from 'lucide-react';
 import { shopifyFetch } from '@/lib/shopify';
 import { SEARCH_PRODUCTS_QUERY } from '@/lib/shopify-queries';
 import { ShopifyProduct } from '@/types/shopify';
-
 import { ProductCard } from '@/components/ProductCard';
 
 interface ShopifySearchResponse {
@@ -70,8 +69,8 @@ function SearchContent() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className="border-b border-gray-100 pb-8 mb-12">
-        <span className="text-[10px] font-bold text-gray-400 tracking-[0.2em] uppercase block mb-3">
+      <div className="border-b border-border pb-8 mb-12">
+        <span className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 tracking-[0.2em] uppercase block mb-3">
           Search Catalogue
         </span>
         <div className="relative max-w-xl">
@@ -80,19 +79,19 @@ function SearchContent() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search products, brands, collections..."
-            className="w-full bg-[#fafafa] border border-gray-200/80 rounded-2xl pl-12 pr-4 py-4 text-sm font-medium tracking-wide focus:border-black focus:bg-white focus:outline-none transition-all text-black placeholder-gray-400 shadow-sm"
+            className="w-full bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800 rounded-2xl pl-12 pr-4 py-4 text-sm font-medium tracking-wide focus:border-foreground/40 dark:focus:border-zinc-500 focus:bg-background dark:focus:bg-zinc-900 focus:outline-none transition-all text-foreground placeholder-gray-400 dark:placeholder-zinc-500 shadow-sm"
             autoFocus
           />
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500">
             {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-black" />
+              <Loader2 className="w-5 h-5 animate-spin text-foreground" />
             ) : (
               <Search className="w-5 h-5" />
             )}
           </div>
         </div>
 
-        <p className="text-[11px] text-gray-400 mt-3 font-medium">
+        <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-3 font-medium">
           {isLoading
             ? 'Searching Shopify database...'
             : `Found ${products.length} ${
@@ -102,17 +101,17 @@ function SearchContent() {
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 text-red-700 text-xs font-semibold rounded-xl border border-red-100 mb-8 uppercase tracking-wide">
+        <div className="p-4 bg-rose-500/10 text-rose-500 text-xs font-semibold rounded-xl border border-rose-500/20 mb-8 uppercase tracking-wide">
           An error occurred while searching: {error}
         </div>
       )}
 
       {!isLoading && debouncedQuery && products.length === 0 && (
         <div className="text-center py-20 max-w-md mx-auto">
-          <h3 className="text-base font-bold uppercase tracking-wider mb-2">
+          <h3 className="text-base font-bold uppercase tracking-wider mb-2 text-foreground">
             No results found
           </h3>
-          <p className="text-sm text-gray-500 font-light leading-relaxed mb-8">
+          <p className="text-sm text-gray-500 dark:text-zinc-400 font-light leading-relaxed mb-8">
             We couldn&apos;t find anything matching &ldquo;{debouncedQuery}
             &rdquo;. Try checking for misspellings.
           </p>
@@ -138,11 +137,11 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <main className="min-h-screen bg-white text-black pt-12 pb-24 selection:bg-black selection:text-white">
+    <main className="min-h-screen bg-background text-foreground pt-12 pb-24 selection:bg-foreground selection:text-background transition-colors duration-300">
       <Suspense
         fallback={
           <div className="flex items-center justify-center min-h-[50vh]">
-            <Loader2 className="w-8 h-8 animate-spin text-black" />
+            <Loader2 className="w-8 h-8 animate-spin text-foreground" />
           </div>
         }
       >

@@ -306,3 +306,32 @@ export const GET_CART_QUERY = `
     }
   }
 `;
+
+export const GET_ALL_COLLECTIONS = `
+  query getCollections {
+    collections(first: 100) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          image {
+            url
+            altText
+          }
+          products(first: 1) {
+            edges {
+              node {
+                featuredImage {
+                  url
+                  altText
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

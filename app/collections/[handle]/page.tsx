@@ -33,14 +33,16 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
 
   if (!collection) {
     return (
-      <main className="min-h-screen bg-white text-black flex flex-col items-center justify-center px-4">
-        <h1 className="text-2xl font-black mb-2">Collection Not Found</h1>
-        <p className="text-gray-500 mb-6">
+      <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-4 transition-colors duration-300">
+        <h1 className="text-2xl font-black mb-2 text-foreground uppercase tracking-tight">
+          Collection Not Found
+        </h1>
+        <p className="text-gray-500 dark:text-zinc-400 mb-6 font-light text-sm">
           {"We couldn't find the collection you're looking for."}
         </p>
         <Link
           href="/"
-          className="rounded-xl bg-black text-white px-6 py-3 text-sm font-semibold hover:bg-gray-800 transition"
+          className="rounded-xl bg-foreground text-background px-6 py-3 text-xs font-bold uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all cursor-pointer"
         >
           Back to Home
         </Link>
@@ -52,22 +54,28 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   const hasProducts = products.length > 0;
 
   return (
-    <main className="min-h-screen bg-white text-black selection:bg-black selection:text-white">
-      <section className="border-b border-gray-100 bg-gray-50/50 py-12 sm:py-16">
+    <main className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background transition-colors duration-300">
+      {/* Шапка коллекции */}
+      <section className="border-b border-border bg-zinc-50/50 dark:bg-zinc-900/10 py-12 sm:py-16 transition-colors">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <nav className="flex mb-4 text-xs font-medium text-gray-400 space-x-2">
-              <Link href="/" className="hover:text-black transition">
+            <nav className="flex mb-4 text-[11px] font-bold tracking-wider uppercase text-gray-400 dark:text-zinc-500 space-x-2">
+              <Link
+                href="/"
+                className="hover:text-foreground transition-colors"
+              >
                 Home
               </Link>
               <span>/</span>
-              <span className="text-gray-600">Collections</span>
+              <span className="text-gray-500 dark:text-zinc-400">
+                Collections
+              </span>
             </nav>
-            <h1 className="text-3xl font-black tracking-tight text-black sm:text-5xl uppercase">
+            <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-5xl uppercase">
               {collection.title}
             </h1>
             {collection.description && (
-              <p className="mt-4 text-base sm:text-lg text-gray-500 leading-relaxed">
+              <p className="mt-4 text-base text-gray-500 dark:text-zinc-400 font-light leading-relaxed">
                 {collection.description}
               </p>
             )}
@@ -77,29 +85,29 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
-          <p className="text-sm font-medium text-gray-500">
+          <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500">
             Showing {products.length}{' '}
             {products.length === 1 ? 'product' : 'products'}
           </p>
         </div>
 
         {hasProducts ? (
-          <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 sm:gap-x-8">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-24 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-            <p className="text-gray-500 text-lg font-medium">
+          <div className="text-center py-24 bg-zinc-50 dark:bg-zinc-900/40 rounded-3xl border border-dashed border-border transition-colors">
+            <p className="text-gray-500 dark:text-zinc-400 text-lg font-medium">
               This collection is currently empty.
             </p>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-gray-400 dark:text-zinc-500 mt-1 font-light">
               Check back later or explore our other categories.
             </p>
             <Link
               href="/"
-              className="mt-6 inline-block rounded-xl bg-black text-white px-6 py-3 text-sm font-semibold hover:bg-gray-800 transition"
+              className="mt-6 inline-block rounded-xl bg-foreground text-background px-6 py-3 text-xs font-bold uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all cursor-pointer"
             >
               Continue Shopping
             </Link>

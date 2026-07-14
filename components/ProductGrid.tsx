@@ -45,7 +45,7 @@ export function ProductGrid({ products }: ProductGridProps) {
 
           <button
             onClick={loadMore}
-            className="rounded-xl border border-black/10 bg-transparent px-10 py-4 text-xs font-bold text-black hover:bg-black hover:text-white hover:border-black active:scale-[0.97] transition-all tracking-widest uppercase backdrop-blur-sm"
+            className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-transparent px-10 py-4 text-xs font-bold text-foreground hover:bg-foreground hover:text-background active:scale-[0.97] transition-all tracking-widest uppercase backdrop-blur-sm cursor-pointer"
           >
             Load More
           </button>

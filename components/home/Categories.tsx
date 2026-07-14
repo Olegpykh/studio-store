@@ -1,36 +1,36 @@
 import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 import { CORE_CATEGORIES } from './config';
-
 
 export function Categories() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between mb-10">
-        <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.25em]">
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest">
           Core Collections
         </h3>
-        <div className="h-[1px] bg-gray-100 flex-1 ml-6"></div>
+        <div className="h-[1px] bg-border flex-1 ml-6"></div>
       </div>
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {CORE_CATEGORIES.map((category) => (
           <Link
             key={category.name}
             href={category.href}
-            className="relative p-8 rounded-3xl bg-[#fafafa] border border-gray-100 hover:border-black/20 hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.03)] transition-all duration-500 group flex flex-col justify-between h-44 overflow-hidden"
+            className="group relative p-8 rounded-2xl bg-zinc-50/50 dark:bg-zinc-900/30 border border-border hover:bg-zinc-50 dark:hover:bg-zinc-900/60 transition-all duration-300 flex flex-col justify-between h-44 cursor-pointer"
           >
             <div>
-              <span className="text-[10px] text-gray-400 block mb-1 font-bold uppercase tracking-wider">
+              <span className="text-[10px] text-gray-400 dark:text-zinc-500 block mb-1 font-semibold uppercase tracking-wider">
                 {category.count}
               </span>
-              <span className="font-bold text-xl tracking-tight text-black block group-hover:text-gray-800 transition-colors">
+              <span className="font-bold text-xl tracking-tight text-foreground block uppercase">
                 {category.name}
               </span>
             </div>
-            <div className="flex items-center text-xs text-black/40 group-hover:text-black font-bold tracking-wider uppercase transition-colors mt-4">
+
+            <div className="flex items-center justify-between text-xs text-gray-400 dark:text-zinc-500 group-hover:text-foreground transition-colors font-bold tracking-wider uppercase mt-4">
               <span>Explore Collection</span>
-              <span className="transform translate-x-1 group-hover:translate-x-2 transition-transform duration-300 ml-1">
-                →
-              </span>
+              <ArrowUpRight className="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </div>
           </Link>
         ))}
