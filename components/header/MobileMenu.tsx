@@ -1,7 +1,10 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Bookmark, User, ArrowUpRight } from 'lucide-react';
 import { navigationConfig } from './config';
+import { getWishlist } from '@/lib/wishlist';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -9,10 +12,33 @@ interface MobileMenuProps {
 }
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  // 1. Ленивая инициализация счетчика для безопасной гидратации на клиенте
+  const [wishlistCount, setWishlistCount] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      return getWishlist().length;
+    }
+    return 0;
+  });
+
+  // 2. Только подписываемся на события изменений — никаких синхронных setState в эффекте
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleWishlistUpdate = () => {
+      setWishlistCount(getWishlist().length);
+    };
+
+    window.addEventListener('wishlist-updated', handleWishlistUpdate);
+    return () => {
+      window.removeEventListener('wishlist-updated', handleWishlistUpdate);
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div className="md:hidden border-t border-border bg-background/95 dark:bg-zinc-950/95 backdrop-blur-md px-6 py-8 space-y-8 shadow-xl max-h-[calc(100vh-80px)] overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-300 transition-colors">
+      {/* Сетка основных категорий навигации */}
       {navigationConfig.map((cat) => (
         <div key={cat.trigger} className="space-y-4">
           <h2 className="text-xs font-bold text-foreground uppercase tracking-[0.2em] border-b border-border pb-2">
@@ -35,6 +61,51 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           </div>
         </div>
       ))}
+
+      {/* Личный кабинет и Вишлист (User Space) */}
+      <div className="space-y-4 pt-4 border-t border-border/60">
+        <h2 className="text-xs font-bold text-foreground uppercase tracking-[0.2em] pb-1">
+          User Panel
+        </h2>
+
+        <div className="grid grid-cols-2 gap-3">
+          {/* Ссылка на Вишлист */}
+          <Link
+            href="/account"
+            onClick={onClose}
+            className="flex items-center justify-between p-3 border border-border/80 bg-background/50 hover:border-foreground/40 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <Bookmark className="w-4 h-4 text-gray-400 dark:text-zinc-500" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider">
+                Vault
+              </span>
+            </div>
+            {wishlistCount > 0 ? (
+              <span className="bg-foreground text-background text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-none">
+                {wishlistCount}
+              </span>
+            ) : (
+              <ArrowUpRight className="w-3 h-3 text-gray-400" />
+            )}
+          </Link>
+
+          {/* Ссылка на Профиль */}
+          <Link
+            href="/account"
+            onClick={onClose}
+            className="flex items-center justify-between p-3 border border-border/80 bg-background/50 hover:border-foreground/40 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4 text-gray-400 dark:text-zinc-500" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider">
+                Profile
+              </span>
+            </div>
+            <ArrowUpRight className="w-3 h-3 text-gray-400" />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

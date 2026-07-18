@@ -1,14 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, User, Search, ChevronDown, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import {
+  ShoppingCart,
+  User,
+  Search,
+  ChevronDown,
+  Menu,
+  X,
+  Bookmark,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { navigationConfig } from './config';
 import { DesktopMenu } from './DesktopMenu';
 import { MobileMenu } from './MobileMenu';
 import { useRouter } from 'next/navigation';
-import { useCart } from '@/hooks/useCart'; 
-import { ThemeToggle } from '@/components/ThemeToggle'; 
+import { useCart } from '@/hooks/useCart';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { getWishlist } from '@/lib/wishlist';
 
 export default function Header() {
   const router = useRouter();
@@ -16,7 +25,33 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Флаг монтирования
+  const [mounted, setMounted] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState<number>(0);
+
   const totalQuantity = useCart((state) => state.totalQuantity);
+
+  // Используем эффект только для подписки на внешние события и асинхронного флага монтирования
+  useEffect(() => {
+    // 1. Ставим флаг монтирования через requestAnimationFrame или setTimeout,
+    // чтобы вывести вызов из синхронного потока выполнения эффекта
+    const frame = requestAnimationFrame(() => {
+      setMounted(true);
+      setWishlistCount(getWishlist().length);
+    });
+
+    const handleWishlistUpdate = () => {
+      setWishlistCount(getWishlist().length);
+    };
+
+    // 2. Подписываемся на внешние события
+    window.addEventListener('wishlist-updated', handleWishlistUpdate);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('wishlist-updated', handleWishlistUpdate);
+    };
+  }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,18 +140,39 @@ export default function Header() {
               <Search className="w-4 h-4" />
             </button>
 
-            <button className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors flex items-center justify-center cursor-pointer">
+            <Link
+              href="/account"
+              className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors flex items-center justify-center cursor-pointer"
+              aria-label="User Account"
+            >
               <User className="w-4 h-4" />
-            </button>
+            </Link>
 
             <ThemeToggle />
 
+            {/* Иконка вишлиста/закладки */}
+            <Link
+              href="/account"
+              className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors relative flex items-center justify-center cursor-pointer"
+              aria-label="Saved Items"
+            >
+              <Bookmark className="w-4 h-4" />
+              {/* Рендерим бейдж только на клиенте после монтирования */}
+              {mounted && wishlistCount > 0 && (
+                <span className="absolute top-1 right-1 bg-foreground text-background text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center ring-2 ring-background animate-fade-in">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Иконка корзины */}
             <Link
               href="/cart"
               className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors relative flex items-center justify-center"
             >
               <ShoppingCart className="w-4 h-4" />
-              {totalQuantity > 0 && (
+              {/* Рендерим бейдж только на клиенте после монтирования */}
+              {mounted && totalQuantity > 0 && (
                 <span className="absolute top-1 right-1 bg-foreground text-background text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center ring-2 ring-background animate-fade-in">
                   {totalQuantity}
                 </span>
