@@ -1,3 +1,4 @@
+// components/ProductDetails.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,8 +9,12 @@ import {
   ShieldCheck,
   Truck,
   RotateCcw,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { getWishlist, addToWishlist, removeFromWishlist } from '@/lib/wishlist';
+import { useCart } from '@/hooks/useCart';
 
 interface ProductImage {
   node: {
@@ -56,6 +61,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const [selectedVariantId, setSelectedVariantId] = useState(
     product?.variants?.edges?.[0]?.node?.id || ''
   );
+
+  const { addItem, isLoading } = useCart();
 
   const [isSaved, setIsSaved] = useState<boolean>(() => {
     if (typeof window !== 'undefined' && product?.id) {
@@ -110,6 +117,21 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     }
   };
 
+  const handleAddToCart = async () => {
+    if (!selectedVariantId) return;
+    await addItem(selectedVariantId, 1);
+  };
+
+  const goToPrevImage = () => {
+    if (images.length === 0) return;
+    setActiveImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const goToNextImage = () => {
+    if (images.length === 0) return;
+    setActiveImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
   const currentImage = images[activeImageIndex]?.node;
   const amount = product?.priceRange?.minVariantPrice?.amount;
   const currencyCode = product?.priceRange?.minVariantPrice?.currencyCode;
@@ -139,13 +161,31 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 60vw"
-              // Изменили object-cover на object-contain, чтобы фотка не резалась
               className="object-contain p-6"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center font-mono text-xs text-zinc-400">
               NO IMAGE AVAILABLE
             </div>
+          )}
+
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={goToPrevImage}
+                aria-label="Previous image"
+                className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-background/80 border border-border/80 hover:bg-foreground hover:text-background transition-all"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={goToNextImage}
+                aria-label="Next image"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-background/80 border border-border/80 hover:bg-foreground hover:text-background transition-all"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </>
           )}
         </div>
 
@@ -167,7 +207,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   alt={edge.node.altText || `Preview ${index + 1}`}
                   fill
                   sizes="100px"
-                  // Тут тоже меняем на object-contain для превьюшек
                   className="object-contain p-2"
                 />
               </button>
@@ -242,11 +281,18 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         <div className="space-y-6 mt-8">
           <div className="flex gap-3">
             <button
-              className="flex-1 bg-foreground text-background border border-foreground hover:bg-background hover:text-foreground transition-all py-3.5 px-6 text-xs font-bold font-mono tracking-widest uppercase flex items-center justify-center gap-2"
-              onClick={() => console.log('Add to cart:', selectedVariantId)}
+              className="flex-1 bg-foreground text-background border border-foreground hover:bg-background hover:text-foreground transition-all py-3.5 px-6 text-xs font-bold font-mono tracking-widest uppercase flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+              onClick={handleAddToCart}
+              disabled={!selectedVariantId || isLoading}
             >
-              <ShoppingBag className="w-4 h-4" />
-              Acquire Hardware
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <>
+                  <ShoppingBag className="w-4 h-4" />
+                  Add to cart
+                </>
+              )}
             </button>
 
             <button

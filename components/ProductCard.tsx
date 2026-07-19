@@ -1,10 +1,11 @@
+// components/ProductCard.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShopifyProduct } from '@/types/shopify';
-import { ChevronLeft, ChevronRight, Bookmark } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Bookmark, ImageOff } from 'lucide-react';
 import {
   getWishlist,
   addToWishlist,
@@ -184,8 +185,16 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
             )}
           </>
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-zinc-300 dark:text-zinc-600 text-[10px] font-bold uppercase tracking-widest">
-            No Image
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-zinc-300 dark:text-zinc-700">
+            <div className="relative w-full h-full">
+              <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,currentColor_0px,currentColor_1px,transparent_1px,transparent_12px)] opacity-[0.07]" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                <ImageOff className="w-7 h-7 stroke-[1.25] text-zinc-300 dark:text-zinc-700" />
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700">
+                  No Image
+                </span>
+              </div>
+            </div>
           </div>
         )}
       </div>

@@ -335,3 +335,15 @@ export const GET_ALL_COLLECTIONS = `
     }
   }
 `;
+export const ADD_CART_LINES = `
+  mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart {
+        id
+        lines(first: 100) {
+          edges { node { id quantity merchandise { ... on ProductVariant { id } } } }
+        }
+      }
+    }
+  }
+`;

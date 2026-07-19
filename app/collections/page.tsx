@@ -1,19 +1,18 @@
+// app/collections/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { shopifyFetch } from '@/lib/shopify';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Loader2 } from 'lucide-react';
-import { GET_ALL_COLLECTIONS} from '@/lib/shopify-queries';
+import { GET_ALL_COLLECTIONS } from '@/lib/shopify-queries';
 import { ShopifyCollectionsResponse } from './interfaces';
-
+import { CollectionCard } from '@/app/collections/CollectionCard';
 
 export default function CollectionsPage() {
- const [collections, setCollections] = useState<
-   ShopifyCollectionsResponse['collections']['edges'][number]['node'][]
- >([]);
-  const [visibleCount, setVisibleCount] = useState(9); 
+  const [collections, setCollections] = useState<
+    ShopifyCollectionsResponse['collections']['edges'][number]['node'][]
+  >([]);
+  const [visibleCount, setVisibleCount] = useState(9);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +33,7 @@ export default function CollectionsPage() {
   }, []);
 
   const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + 9); 
+    setVisibleCount((prev) => prev + 9);
   };
 
   const visibleCollections = collections.slice(0, visibleCount);
@@ -63,62 +62,9 @@ export default function CollectionsPage() {
         {visibleCollections.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {visibleCollections.map((collection) => {
-                const collectionLink = `/collections/${collection.handle}`;
-
-                const imageUrl =
-                  collection.image?.url ||
-                  collection.products?.edges?.[0]?.node?.featuredImage?.url;
-
-                const imageAlt =
-                  collection.image?.altText ||
-                  collection.products?.edges?.[0]?.node?.featuredImage
-                    ?.altText ||
-                  collection.title;
-
-                return (
-                  <Link
-                    key={collection.id}
-                    href={collectionLink}
-                    className="group block cursor-pointer"
-                  >
-                    <div className="aspect-[4/3] w-full bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/80 rounded-2xl relative overflow-hidden flex items-center justify-center transition-all duration-500 group-hover:bg-background dark:group-hover:bg-zinc-900 group-hover:border-zinc-300 dark:group-hover:border-zinc-700">
-                      {imageUrl ? (
-                        <div className="relative w-full h-full p-6 transition-transform duration-700 ease-out group-hover:scale-[1.03]">
-                          <Image
-                            src={imageUrl}
-                            alt={imageAlt}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="object-contain p-4"
-                          />
-                        </div>
-                      ) : (
-                        <div className="text-zinc-300 dark:text-zinc-600 font-bold text-[10px] tracking-widest">
-                          No Cover Image
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="mt-4 space-y-1 px-1">
-                      <h3 className="font-bold text-sm text-foreground group-hover:text-gray-500 dark:group-hover:text-zinc-400 transition-colors duration-300">
-                        {collection.title}
-                      </h3>
-                      {collection.description && (
-                        <p className="text-[11px] text-gray-400 dark:text-zinc-500 font-sans normal-case tracking-normal font-light line-clamp-2 leading-relaxed">
-                          {collection.description}
-                        </p>
-                      )}
-                      <div className="pt-2 flex items-center text-foreground font-bold text-[10px]">
-                        Explore Collection
-                        <span className="ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                          →
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
+              {visibleCollections.map((collection) => (
+                <CollectionCard key={collection.id} collection={collection} />
+              ))}
             </div>
 
             {hasMore && (
