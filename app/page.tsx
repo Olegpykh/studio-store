@@ -43,7 +43,7 @@ export default async function Home() {
       </RevealSection>
 
       <RevealSection>
-        <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8 flex justify-center">
+        <section className="mx-auto max-w-7xl px-4 pt-8 sm:pt-12 sm:px-6 lg:px-8 flex justify-center">
           <Link
             href="/collections"
             className="group inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-foreground border-b border-foreground pb-1 hover:text-gray-500 dark:hover:text-zinc-400 hover:border-gray-400 transition-all duration-300 cursor-pointer"
@@ -55,8 +55,8 @@ export default async function Home() {
       </RevealSection>
 
       <RevealSection>
-        <section className="mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 border-b border-border pb-8 gap-4">
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:py-20 lg:py-28 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-16 border-b border-border pb-6 sm:pb-8 gap-4">
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-foreground uppercase sm:text-3xl">
                 Featured Drops
