@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 
 export default function Footer() {
@@ -7,7 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4 lg:gap-16 pb-16 border-b border-border">
           <div className="md:col-span-1 space-y-4">
             <span className="text-lg font-black tracking-widest uppercase block text-foreground">
-              SPORTGEAR
+              Studio Store
             </span>
             <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed font-light max-w-xs">
               Contemporary wardrobe essentials and urban mobility gear.
@@ -97,7 +99,10 @@ export default function Footer() {
               updates.
             </p>
 
-            <form className="flex max-w-sm gap-4 items-end">
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="flex max-w-sm gap-4 items-end"
+            >
               <div className="flex-1 relative">
                 <input
                   type="email"
@@ -118,7 +123,8 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6">
           <p className="text-[10px] font-medium text-gray-400 dark:text-zinc-500 tracking-wider">
-            © {new Date().getFullYear()} SPORTGEAR. Crafted for modern living.
+            © {new Date().getFullYear()} Studio Store. Crafted for modern
+            living.
           </p>
           <div className="flex gap-8 text-[10px] font-medium text-gray-400 dark:text-zinc-500 tracking-wider">
             <Link
