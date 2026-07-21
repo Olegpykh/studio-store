@@ -10,7 +10,7 @@ export async function shopifyFetch<T>(
   variables: Record<string, unknown> = {}
 ): Promise<T> {
   const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
-  const endpoint = domain ? `https://${domain}/api/2024-01/graphql.json` : '';
+  const endpoint = domain ? `https://${domain}/api/2026-04/graphql.json` : '';
   const key = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
   if (!endpoint || !key) {

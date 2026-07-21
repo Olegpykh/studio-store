@@ -1,3 +1,4 @@
+// lib/shopify-queries.ts
 export const GET_PRODUCTS = /* GraphQL */ `
   query GetProducts($first: Int!, $sortKey: ProductSortKeys, $query: String) {
     products(first: $first, sortKey: $sortKey, query: $query) {
@@ -31,7 +32,6 @@ export const GET_PRODUCTS = /* GraphQL */ `
     }
   }
 `;
-
 
 export const GET_PRODUCT_BY_HANDLE = /* GraphQL */ `
   query GetProductByHandle($handle: String!) {
@@ -71,39 +71,6 @@ export const GET_PRODUCT_BY_HANDLE = /* GraphQL */ `
   }
 `;
 
-export const GET_COLLECTION_BY_HANDLE = `
-  query GetCollectionByHandle($handle: String!) {
-    collectionByHandle(handle: $handle) {
-      id
-      title
-      description
-      products(first: 20) {
-        edges {
-          node {
-            id
-            title
-            handle
-            priceRange {
-              minVariantPrice {
-                amount
-              }
-            }
-            images(first: 1) {
-              edges {
-                node {
-                  src
-                  altText
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-
 export const GET_COLLECTION_PRODUCTS = `
   query getCollectionProducts($handle: String!, $first: Int!) {
     collection(handle: $handle) {
@@ -136,25 +103,6 @@ export const GET_COLLECTION_PRODUCTS = `
                 }
               }
             }
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const GET_COLLECTIONS = `
-  {
-    collections(first: 10) {
-      edges {
-        node {
-          id
-          title
-          handle
-          description
-          image {
-            url
-            altText
           }
         }
       }
@@ -331,6 +279,63 @@ export const GET_ALL_COLLECTIONS = `
             }
           }
         }
+      }
+    }
+  }
+`;
+
+export const CREATE_CUSTOMER_ADDRESS_MUTATION = `
+  mutation customerAddressCreate(
+    $customerAccessToken: String!
+    $address: MailingAddressInput!
+  ) {
+    customerAddressCreate(
+      customerAccessToken: $customerAccessToken
+      address: $address
+    ) {
+      customerAddress {
+        id
+      }
+      customerUserErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const UPDATE_CUSTOMER_ADDRESS_MUTATION = `
+  mutation customerAddressUpdate(
+    $customerAccessToken: String!
+    $id: ID!
+    $address: MailingAddressInput!
+  ) {
+    customerAddressUpdate(
+      customerAccessToken: $customerAccessToken
+      id: $id
+      address: $address
+    ) {
+      customerAddress {
+        id
+      }
+      customerUserErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const DELETE_CUSTOMER_ADDRESS_MUTATION = `
+  mutation customerAddressDelete($customerAccessToken: String!, $id: ID!) {
+    customerAddressDelete(
+      customerAccessToken: $customerAccessToken
+      id: $id
+    ) {
+      deletedCustomerAddressId
+      customerUserErrors {
+        field
+        message
       }
     }
   }

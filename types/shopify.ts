@@ -1,3 +1,4 @@
+// types/shopify.ts
 export type ShopifyImage = {
   url: string;
   altText?: string;
@@ -21,6 +22,7 @@ export type ShopifyProduct = {
   handle: string;
   vendor?: string;
   description?: string;
+  descriptionHtml?: string;
   featuredImage?: ShopifyImage;
   images?: {
     edges: Array<{
@@ -47,6 +49,14 @@ export type ProductsQuery = {
 
 export type SingleProductQuery = {
   product: ShopifyProduct | null;
+};
+
+export type ShopifySearchResponse = {
+  products: {
+    edges: Array<{
+      node: ShopifyProduct;
+    }>;
+  };
 };
 
 export type ShopifyCollection = {

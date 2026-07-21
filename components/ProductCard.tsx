@@ -1,14 +1,93 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShopifyProduct } from '@/types/shopify';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Bookmark, ImageOff } from 'lucide-react';
+import {
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  type WishlistItem,
+} from '@/lib/wishlist';
 
 export function ProductCard({ product }: { product: ShopifyProduct }) {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const productLink = product.handle ? `/products/${product.handle}` : '/';
+
+  const [isSaved, setIsSaved] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return getWishlist().some((item) => item.id === product.id);
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleWishlistUpdate = () => {
+      setIsSaved(getWishlist().some((item) => item.id === product.id));
+    };
+
+    window.addEventListener('wishlist-updated', handleWishlistUpdate);
+    return () => {
+      window.removeEventListener('wishlist-updated', handleWishlistUpdate);
+    };
+  }, [product.id]);
+
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!product.id) return;
+
+    if (isSaved) {
+      removeFromWishlist(product.id);
+      setIsSaved(false);
+    } else {
+      const wishlistImages: { url: string; altText: string | null }[] = [];
+
+      if (product.featuredImage?.url) {
+        wishlistImages.push({
+          url: product.featuredImage.url,
+          altText: product.featuredImage.altText || null,
+        });
+      }
+
+      product.images?.edges?.forEach((edge) => {
+        if (
+          edge.node?.url &&
+          !wishlistImages.some((img) => img.url === edge.node.url)
+        ) {
+          wishlistImages.push({
+            url: edge.node.url,
+            altText: edge.node.altText || null,
+          });
+        }
+      });
+
+      const wishlistItem: WishlistItem = {
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        vendor: product.vendor,
+        priceRange: {
+          minVariantPrice: {
+            amount: product.priceRange?.minVariantPrice?.amount || '0.00',
+            currencyCode:
+              product.priceRange?.minVariantPrice?.currencyCode || 'EUR',
+          },
+        },
+        images: {
+          edges: wishlistImages.map((img) => ({
+            node: img,
+          })),
+        },
+      };
+
+      addToWishlist(wishlistItem);
+      setIsSaved(true);
+    }
+  };
 
   const allImages: string[] = [];
 
@@ -53,9 +132,23 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
   return (
     <Link
       href={productLink}
-      className="group cursor-pointer block tracking-tight text-foreground"
+      className="group cursor-pointer block tracking-tight text-foreground relative"
     >
       <div className="overflow-hidden rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/80 aspect-square relative flex items-center justify-center transition-all duration-500 group-hover:bg-background dark:group-hover:bg-zinc-900 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.02)] dark:group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] group-hover:border-zinc-300 dark:group-hover:border-zinc-700">
+        <button
+          onClick={handleWishlistClick}
+          className="absolute top-4 right-4 z-20 p-2 text-foreground hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer group/btn"
+          aria-label={isSaved ? 'Remove from saved' : 'Save item'}
+        >
+          <Bookmark
+            className={`w-5 h-5 transition-all duration-300 ${
+              isSaved
+                ? 'fill-foreground text-foreground'
+                : 'text-zinc-400 dark:text-zinc-500 group-hover/btn:text-foreground'
+            }`}
+          />
+        </button>
+
         {hasImages ? (
           <>
             <div className="relative w-full h-full p-6 transition-transform duration-700 ease-out group-hover:scale-[1.02]">
@@ -102,8 +195,16 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
             )}
           </>
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-zinc-300 dark:text-zinc-600 text-[10px] font-bold uppercase tracking-widest">
-            No Image
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-zinc-300 dark:text-zinc-700">
+            <div className="relative w-full h-full">
+              <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,currentColor_0px,currentColor_1px,transparent_1px,transparent_12px)] opacity-[0.07]" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                <ImageOff className="w-7 h-7 stroke-[1.25] text-zinc-300 dark:text-zinc-700" />
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-700">
+                  No Image
+                </span>
+              </div>
+            </div>
           </div>
         )}
       </div>
