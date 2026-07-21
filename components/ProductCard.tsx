@@ -1,3 +1,4 @@
+// components/ProductCard.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -16,20 +17,20 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const productLink = product.handle ? `/products/${product.handle}` : '/';
 
-  const [isSaved, setIsSaved] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return getWishlist().some((item) => item.id === product.id);
-    }
-    return false;
-  });
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsSaved(getWishlist().some((item) => item.id === product.id));
+    }, 0);
+
     const handleWishlistUpdate = () => {
       setIsSaved(getWishlist().some((item) => item.id === product.id));
     };
 
     window.addEventListener('wishlist-updated', handleWishlistUpdate);
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('wishlist-updated', handleWishlistUpdate);
     };
   }, [product.id]);
