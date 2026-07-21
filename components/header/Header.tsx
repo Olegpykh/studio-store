@@ -1,3 +1,4 @@
+// components/header/Header.tsx
 'use client';
 
 import Link from 'next/link';
@@ -64,23 +65,25 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border text-foreground tracking-tight transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-8">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-4 sm:gap-8">
           <Link
             href="/"
-            className="flex items-center gap-3 shrink-0 group"
+            className="flex items-center gap-2 sm:gap-3 shrink-0 group"
             onClick={() => {
               setActiveDropdown(null);
               setIsMenuOpen(false);
             }}
           >
-            <div className="w-9 h-9 bg-foreground text-background rounded-lg flex items-center justify-center transition-transform group-hover:scale-95 duration-300">
-              <span className="font-black text-xl tracking-tighter">S</span>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-foreground text-background rounded-lg flex items-center justify-center transition-transform group-hover:scale-95 duration-300">
+              <span className="font-black text-lg sm:text-xl tracking-tighter">
+                S
+              </span>
             </div>
             <div>
-              <h1 className="font-black text-lg tracking-widest leading-none uppercase text-foreground">
+              <h1 className="font-black text-sm sm:text-lg tracking-widest leading-none uppercase text-foreground">
                 STUDIO STORE
               </h1>
-              <p className="text-[8px] text-gray-400 dark:text-zinc-500 tracking-[0.25em] uppercase mt-1 font-bold">
+              <p className="hidden sm:block text-[8px] text-gray-400 dark:text-zinc-500 tracking-[0.25em] uppercase mt-1 font-bold">
                 Curated Est. 2026
               </p>
             </div>
@@ -130,7 +133,7 @@ export default function Header() {
             </form>
           </div>
 
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
             <Link
               href="/search"
               className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors lg:hidden cursor-pointer flex items-center justify-center"
@@ -141,7 +144,7 @@ export default function Header() {
 
             <Link
               href="/account"
-              className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors flex items-center justify-center cursor-pointer"
+              className="hidden md:flex p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors items-center justify-center cursor-pointer"
               aria-label="User Account"
             >
               <User className="w-4 h-4" />
@@ -151,7 +154,7 @@ export default function Header() {
 
             <Link
               href="/account"
-              className="p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors relative flex items-center justify-center cursor-pointer"
+              className="hidden md:flex p-2 text-gray-500 dark:text-zinc-400 hover:text-foreground hover:bg-gray-50 dark:hover:bg-zinc-900 rounded-lg transition-colors relative items-center justify-center cursor-pointer"
               aria-label="Saved Items"
             >
               <Bookmark className="w-4 h-4" />
