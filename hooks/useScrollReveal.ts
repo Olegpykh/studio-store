@@ -17,11 +17,19 @@ export function useScrollReveal() {
           observer.unobserve(element);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
     );
 
     observer.observe(element);
-    return () => observer.disconnect();
+
+    const fallbackTimer = setTimeout(() => {
+      setIsVisible(true);
+    }, 2000);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(fallbackTimer);
+    };
   }, []);
 
   return { ref, isVisible };
