@@ -12,7 +12,6 @@ interface MobileMenuProps {
 }
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  // 1. Ленивая инициализация счетчика для безопасной гидратации на клиенте
   const [wishlistCount, setWishlistCount] = useState<number>(() => {
     if (typeof window !== 'undefined') {
       return getWishlist().length;
@@ -20,7 +19,6 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     return 0;
   });
 
-  // 2. Только подписываемся на события изменений — никаких синхронных setState в эффекте
   useEffect(() => {
     if (!isOpen) return;
 
@@ -38,7 +36,6 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
   return (
     <div className="md:hidden border-t border-border bg-background/95 dark:bg-zinc-950/95 backdrop-blur-md px-6 py-8 space-y-8 shadow-xl max-h-[calc(100vh-80px)] overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-300 transition-colors">
-      {/* Сетка основных категорий навигации */}
       {navigationConfig.map((cat) => (
         <div key={cat.trigger} className="space-y-4">
           <h2 className="text-xs font-bold text-foreground uppercase tracking-[0.2em] border-b border-border pb-2">
@@ -62,14 +59,12 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
       ))}
 
-      {/* Личный кабинет и Вишлист (User Space) */}
       <div className="space-y-4 pt-4 border-t border-border/60">
         <h2 className="text-xs font-bold text-foreground uppercase tracking-[0.2em] pb-1">
           User Panel
         </h2>
 
         <div className="grid grid-cols-2 gap-3">
-          {/* Ссылка на Вишлист */}
           <Link
             href="/account"
             onClick={onClose}
@@ -90,7 +85,6 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             )}
           </Link>
 
-          {/* Ссылка на Профиль */}
           <Link
             href="/account"
             onClick={onClose}

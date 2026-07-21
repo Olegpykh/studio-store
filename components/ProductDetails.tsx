@@ -1,4 +1,3 @@
-// components/ProductDetails.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -15,17 +14,13 @@ import {
 } from 'lucide-react';
 import { getWishlist, addToWishlist, removeFromWishlist } from '@/lib/wishlist';
 import { useCart } from '@/hooks/useCart';
+import type { ShopifyPrice } from '@/types/shopify';
 
 interface ProductImage {
   node: {
     url: string;
     altText?: string | null;
   };
-}
-
-interface Price {
-  amount: string;
-  currencyCode: string;
 }
 
 interface ProductDetailsProps {
@@ -40,7 +35,7 @@ interface ProductDetailsProps {
       edges: ProductImage[];
     };
     priceRange?: {
-      minVariantPrice: Price;
+      minVariantPrice: ShopifyPrice;
     };
     variants?: {
       edges: Array<{
@@ -48,7 +43,7 @@ interface ProductDetailsProps {
           id: string;
           title: string;
           availableForSale: boolean;
-          price?: Price;
+          price?: ShopifyPrice;
         };
       }>;
     };
@@ -150,9 +145,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-6">
-      {/* Левая колонка: Изображения */}
       <div className="lg:col-span-7 space-y-4">
-        {/* Главное изображение */}
         <div className="relative aspect-square bg-zinc-50 dark:bg-zinc-900 border border-border/80 overflow-hidden">
           {currentImage?.url ? (
             <Image
@@ -189,7 +182,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           )}
         </div>
 
-        {/* Галерея превью */}
         {images.length > 1 && (
           <div className="grid grid-cols-5 gap-2">
             {images.map((edge, index) => (
@@ -215,10 +207,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         )}
       </div>
 
-      {/* Правая колонка: Только инфо, выбор конфигураций и покупка */}
       <div className="lg:col-span-5 flex flex-col justify-between">
         <div className="space-y-6">
-          {/* Бренд, Название и Цена */}
           <div className="space-y-1">
             {product.vendor && (
               <span className="text-[10px] font-bold font-mono tracking-[0.2em] text-gray-400 dark:text-zinc-500 uppercase block">
@@ -235,7 +225,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
           <hr className="border-border/65" />
 
-          {/* Выбор вариантов */}
           {product.variants && product.variants.edges.length > 1 && (
             <div className="space-y-3">
               <span className="text-[9px] font-bold font-mono tracking-wider text-gray-400 dark:text-zinc-500 uppercase block">
@@ -262,7 +251,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             </div>
           )}
 
-          {/* Описание товара */}
           {cleanDescriptionHtml ? (
             <div
               className="prose prose-sm dark:prose-invert max-w-none text-xs text-zinc-600 dark:text-zinc-400 font-mono leading-relaxed space-y-2"
@@ -277,7 +265,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           )}
         </div>
 
-        {/* Действия и преимущества */}
         <div className="space-y-6 mt-8">
           <div className="flex gap-3">
             <button
@@ -310,7 +297,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             </button>
           </div>
 
-          {/* Гарантии и ТТХ */}
           <div className="border border-border/80 p-4 space-y-3 bg-zinc-50/50 dark:bg-zinc-900/30">
             <div className="flex items-center gap-2.5 text-[10px] font-mono text-zinc-500 dark:text-zinc-400">
               <Truck className="w-4 h-4 text-foreground/75" />

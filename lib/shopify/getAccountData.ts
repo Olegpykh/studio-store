@@ -1,4 +1,3 @@
-// lib/shopify/getAccountData.ts
 import { ShopifyCustomer } from '@/types/account';
 
 export async function getShopifyAccountData(

@@ -44,6 +44,7 @@ export default async function AccountPage() {
             tier={profileStats.tier}
             memberSince={profileStats.memberSince}
             spentThisYear={profileStats.spentThisYear}
+            currentYear={profileStats.currentYear}
           />
 
           <div className="lg:col-span-8 space-y-12 border-l border-border/80 pl-6 lg:pl-10 w-full">

@@ -1,4 +1,3 @@
-// lib/utils/formatAccountData.ts
 import {
   ShopifyCustomer,
   ShopifyOrderNode,
@@ -6,6 +5,7 @@ import {
   FormattedOrder,
   FormattedAddress,
 } from '@/types/account';
+import { extractNumericId } from '@/lib/utils/shopifyId';
 
 export function formatOrders(customer: ShopifyCustomer): FormattedOrder[] {
   return (customer.orders?.edges || []).map(
@@ -39,6 +39,8 @@ export function formatAddresses(customer: ShopifyCustomer): FormattedAddress[] {
 
   return (customer.addresses?.edges || []).map(
     ({ node }: { node: ShopifyAddressNode }): FormattedAddress => ({
+      id: extractNumericId(node.id),
+      rawId: node.id,
       label:
         node.id === defaultAddressId
           ? 'Primary Coordinates'
@@ -65,10 +67,12 @@ export function getProfileStats(
     }
   );
 
+  const currentYear = new Date().getFullYear();
+
   const spentThisYearNum = (customer.orders?.edges || [])
     .filter(
       ({ node }: { node: ShopifyOrderNode }) =>
-        new Date(node.processedAt).getFullYear() === 2026
+        new Date(node.processedAt).getFullYear() === currentYear
     )
     .reduce(
       (sum: number, { node }: { node: ShopifyOrderNode }) =>
@@ -80,5 +84,6 @@ export function getProfileStats(
     tier: orders.length > 3 ? 'LEVEL_02_USER' : 'BASIC_ACCESS',
     memberSince: memberSinceDate,
     spentThisYear: `€${spentThisYearNum.toFixed(2)}`,
+    currentYear,
   };
 }

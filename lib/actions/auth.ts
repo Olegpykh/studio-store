@@ -1,19 +1,13 @@
-
 'use server';
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-/**
- * Функция для безопасного и гарантированного получения конфигов Shopify.
- * Она считывает переменные с префиксом NEXT_PUBLIC_ напрямую в момент вызова экшенов.
- */
 function getShopifyConfig() {
   const domain =
     process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ||
     'sportgear-dev-store.myshopify.com';
 
-  // Берем именно ту переменную, которая прописана в .env.local
   const token = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
   if (!token) {
@@ -25,23 +19,17 @@ function getShopifyConfig() {
   return { domain, token };
 }
 
-/**
- * Вспомогательная функция для создания сессионной куки
- */
 async function setSessionCookie(token: string) {
   const cookieStore = await cookies();
   cookieStore.set('customer_token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 30, // 30 дней
+    maxAge: 60 * 60 * 24 * 30,
     path: '/',
   });
 }
 
-/**
- * 1. Экшен входа (Login Action)
- */
 export async function loginAction(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -115,9 +103,6 @@ export async function loginAction(formData: FormData) {
   redirect('/account');
 }
 
-/**
- * 2. Экшен регистрации (Register Action)
- */
 export async function registerAction(formData: FormData) {
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
@@ -133,11 +118,9 @@ export async function registerAction(formData: FormData) {
 
   const { domain, token } = getShopifyConfig();
   let accessTokenToSet: string | null = null;
+  let shouldRedirectToLogin = false;
 
   try {
-    console.log('Sending register request to Shopify for email:', email);
-
-    // Шаг 1: Создаем аккаунт в Shopify
     const registerResponse = await fetch(
       `https://${domain}/api/2026-04/graphql.json`,
       {
@@ -186,10 +169,6 @@ export async function registerAction(formData: FormData) {
 
     const registerResult = await registerResponse.json();
 
-    console.log('--- SHOPIFY REGISTER API RESPONSE ---');
-    console.log(JSON.stringify(registerResult, null, 2));
-    console.log('--------------------------------------');
-
     if (registerResult.errors) {
       return {
         error: registerResult.errors[0]?.message || 'GraphQL Query Error.',
@@ -203,7 +182,6 @@ export async function registerAction(formData: FormData) {
       return { error: registerErrors[0].message };
     }
 
-    // Шаг 2: Авторизуем пользователя после успешной регистрации
     const loginResponse = await fetch(
       `https://${domain}/api/2026-04/graphql.json`,
       {
@@ -240,10 +218,9 @@ export async function registerAction(formData: FormData) {
     if (accessTokenToSet) {
       await setSessionCookie(accessTokenToSet);
     } else {
-      redirect('/login');
+      shouldRedirectToLogin = true;
     }
   } catch (error) {
-    // Безопасно извлекаем сообщение об ошибке без использования any
     const errorMessage =
       error instanceof Error ? error.message : 'Check terminal logs.';
     console.error('❌ CRITICAL REGISTRATION EXCEPTION:', errorMessage);
@@ -252,77 +229,15 @@ export async function registerAction(formData: FormData) {
     };
   }
 
+  if (shouldRedirectToLogin) {
+    redirect('/login');
+  }
+
   redirect('/account');
 }
 
-/**
- * 3. Экшен выхода (Logout Action)
- */
 export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete('customer_token');
   redirect('/login');
-}
-
-/**
- * Получение данных профиля текущего авторизованного пользователя
- */
-export async function getCustomerData() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('customer_token')?.value;
-
-  if (!token) {
-    return null;
-  }
-
-  const { domain, token: storefrontToken } = getShopifyConfig();
-
-  try {
-    const response = await fetch(`https://${domain}/api/2026-04/graphql.json`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': storefrontToken!,
-      },
-      body: JSON.stringify({
-        query: `
-          query getCustomerDetails($customerAccessToken: String!) {
-            customer(customerAccessToken: $customerAccessToken) {
-              firstName
-              lastName
-              email
-              phone
-              orders(first: 10) {
-                edges {
-                  node {
-                    id
-                    orderNumber
-                    processedAt
-                    financialStatus
-                    fulfillmentStatus
-                    totalPrice {
-                      amount
-                      currencyCode
-                    }
-                  }
-                }
-              }
-            }
-          }
-        `,
-        variables: {
-          customerAccessToken: token,
-        },
-      }),
-      next: { revalidate: 0 }, // Не кэшируем жестко профиль пользователя
-    });
-
-    if (!response.ok) return null;
-
-    const result = await response.json();
-    return result.data?.customer || null;
-  } catch (error) {
-    console.error('Error fetching customer data:', error);
-    return null;
-  }
 }

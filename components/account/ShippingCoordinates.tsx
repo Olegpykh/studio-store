@@ -1,6 +1,8 @@
-// components/account/ShippingCoordinates.tsx
+import Link from 'next/link';
 import { ArrowUpRight, MapPin } from 'lucide-react';
 import { FormattedAddress } from '@/types/account';
+import { DeleteAddressButton } from '@/components/account/DeleteAddressButton';
+import { deleteAddressAction } from '@/lib/actions/address';
 
 interface ShippingCoordinatesProps {
   addresses: FormattedAddress[];
@@ -24,15 +26,18 @@ export function ShippingCoordinates({ addresses }: ShippingCoordinatesProps) {
             <span className="text-[9px] font-mono tracking-widest text-gray-400 dark:text-zinc-500 uppercase">
               No coordinates registered in master system.
             </span>
-            <button className="text-[9px] font-bold tracking-[0.15em] text-foreground uppercase hover:underline font-mono inline-flex items-center gap-1">
+            <Link
+              href="/account/addresses/new"
+              className="text-[9px] font-bold tracking-[0.15em] text-foreground uppercase hover:underline font-mono inline-flex items-center gap-1"
+            >
               Register Coordinates
               <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+            </Link>
           </div>
         ) : (
-          addresses.map((address: FormattedAddress, idx: number) => (
+          addresses.map((address: FormattedAddress) => (
             <div
-              key={idx}
+              key={address.id}
               className="border border-border/85 bg-background/30 p-5 space-y-4"
             >
               <div className="flex justify-between items-center">
@@ -52,10 +57,19 @@ export function ShippingCoordinates({ addresses }: ShippingCoordinatesProps) {
                 <p>{address.cityCountry}</p>
               </div>
 
-              <button className="text-[9px] font-bold tracking-[0.15em] text-foreground uppercase hover:underline font-mono inline-flex items-center gap-1">
-                Modify Coordinates
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center justify-between pt-1">
+                <Link
+                  href={`/account/addresses/${address.id}/edit`}
+                  className="text-[9px] font-bold tracking-[0.15em] text-foreground uppercase hover:underline font-mono inline-flex items-center gap-1"
+                >
+                  Modify Coordinates
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+
+                <DeleteAddressButton
+                  action={deleteAddressAction.bind(null, address.rawId)}
+                />
+              </div>
             </div>
           ))
         )}

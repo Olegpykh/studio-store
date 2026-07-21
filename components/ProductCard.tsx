@@ -1,4 +1,3 @@
-// components/ProductCard.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -17,8 +16,6 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const productLink = product.handle ? `/products/${product.handle}` : '/';
 
-  // Ленивая инициализация стейта для защиты от ошибок гидратации.
-  // Теперь проверяем наличие ID внутри массива объектов.
   const [isSaved, setIsSaved] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       return getWishlist().some((item) => item.id === product.id);
@@ -26,7 +23,6 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
     return false;
   });
 
-  // Подписка на событие обновления вишлиста
   useEffect(() => {
     const handleWishlistUpdate = () => {
       setIsSaved(getWishlist().some((item) => item.id === product.id));
@@ -38,7 +34,6 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
     };
   }, [product.id]);
 
-  // Обработчик клика: заменяем toggleWishlist на новые функции
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -49,7 +44,27 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
       removeFromWishlist(product.id);
       setIsSaved(false);
     } else {
-      // Адаптируем структуру ShopifyProduct под WishlistItem
+      const wishlistImages: { url: string; altText: string | null }[] = [];
+
+      if (product.featuredImage?.url) {
+        wishlistImages.push({
+          url: product.featuredImage.url,
+          altText: product.featuredImage.altText || null,
+        });
+      }
+
+      product.images?.edges?.forEach((edge) => {
+        if (
+          edge.node?.url &&
+          !wishlistImages.some((img) => img.url === edge.node.url)
+        ) {
+          wishlistImages.push({
+            url: edge.node.url,
+            altText: edge.node.altText || null,
+          });
+        }
+      });
+
       const wishlistItem: WishlistItem = {
         id: product.id,
         title: product.title,
@@ -63,13 +78,9 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
           },
         },
         images: {
-          edges:
-            product.images?.edges?.map((edge) => ({
-              node: {
-                url: edge.node?.url || '',
-                altText: edge.node?.altText || null,
-              },
-            })) || [],
+          edges: wishlistImages.map((img) => ({
+            node: img,
+          })),
         },
       };
 
@@ -124,7 +135,6 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
       className="group cursor-pointer block tracking-tight text-foreground relative"
     >
       <div className="overflow-hidden rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/80 aspect-square relative flex items-center justify-center transition-all duration-500 group-hover:bg-background dark:group-hover:bg-zinc-900 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.02)] dark:group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] group-hover:border-zinc-300 dark:group-hover:border-zinc-700">
-        {/* Чистая кнопка-закладка (Bookmark) без круглой подложки */}
         <button
           onClick={handleWishlistClick}
           className="absolute top-4 right-4 z-20 p-2 text-foreground hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer group/btn"

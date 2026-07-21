@@ -1,4 +1,3 @@
-// components/collections/CollectionCard.tsx
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShopifyCollectionsResponse } from '@/app/collections/interfaces';

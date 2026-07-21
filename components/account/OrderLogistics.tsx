@@ -1,4 +1,3 @@
-// components/account/OrderLogistics.tsx
 import Link from 'next/link';
 import { ArrowUpRight, Package } from 'lucide-react';
 import { FormattedOrder } from '@/types/account';
@@ -62,14 +61,10 @@ export function OrderLogistics({ orders }: OrderLogisticsProps) {
                 </p>
               </div>
 
-              <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-6 border-t md:border-none pt-3 md:pt-0 border-border/40">
+              <div className="flex items-center md:justify-end w-full md:w-auto border-t md:border-none pt-3 md:pt-0 border-border/40">
                 <span className="font-mono text-sm font-bold text-foreground">
                   {order.total}
                 </span>
-                <button className="text-[9px] font-bold tracking-[0.15em] text-foreground uppercase hover:underline inline-flex items-center gap-1 font-mono">
-                  Track Shipment
-                  <ArrowUpRight className="w-3 h-3" />
-                </button>
               </div>
             </div>
           ))

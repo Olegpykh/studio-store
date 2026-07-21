@@ -1,4 +1,3 @@
-// components/cart/CartItemRow.tsx
 'use client';
 
 import Link from 'next/link';
@@ -28,7 +27,7 @@ export function CartItemRow({
       {/* Картинка ведет на страницу товара /products/[handle] */}
       <Link
         href={`/products/${product.handle}`}
-        className="aspect-[3/4] w-full sm:w-36 bg-zinc-50 dark:bg-zinc-900/50 relative overflow-hidden border border-border flex-shrink-0 dark:opacity-90 transition-opacity hover:opacity-80"
+        className="aspect-[3/4] w-full sm:w-36 bg-zinc-50 dark:bg-zinc-900/50 relative overflow-hidden border border-border flex-shrink-0 transition-opacity hover:opacity-80"
       >
         {image ? (
           <Image
@@ -36,7 +35,7 @@ export function CartItemRow({
             alt={image.altText || product.title}
             fill
             sizes="144px"
-            className="object-cover object-center"
+            className="object-contain p-4"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300 dark:text-zinc-700 text-[9px] font-bold">

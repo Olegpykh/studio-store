@@ -8,6 +8,7 @@ interface AccountSidebarProps {
   tier: string;
   memberSince: string;
   spentThisYear: string;
+  currentYear: number;
 }
 
 export function AccountSidebar({
@@ -16,6 +17,7 @@ export function AccountSidebar({
   tier,
   memberSince,
   spentThisYear,
+  currentYear,
 }: AccountSidebarProps) {
   return (
     <div className="lg:col-span-4 space-y-8">
@@ -63,7 +65,7 @@ export function AccountSidebar({
           </div>
           <div className="flex justify-between items-center text-xs">
             <span className="text-gray-400 dark:text-zinc-500 font-light">
-              2026 Volume:
+              {currentYear} Volume:
             </span>
             <span className="font-mono text-foreground font-bold">
               {spentThisYear}

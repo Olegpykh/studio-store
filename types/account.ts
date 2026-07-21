@@ -1,3 +1,4 @@
+// types/account.ts
 export interface ShopifyOrderNode {
   id: string;
   orderNumber: number;
@@ -30,6 +31,8 @@ export interface FormattedOrder {
 }
 
 export interface FormattedAddress {
+  id: string;
+  rawId: string;
   label: string;
   name: string;
   street: string;

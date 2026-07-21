@@ -21,7 +21,7 @@ export default async function ProductsPage() {
   const hasProducts = products && products.length > 0;
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-12 text-foreground bg-background min-h-screen selection:bg-foreground selection:text-background transition-colors duration-300">
+    <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 text-foreground bg-background min-h-screen selection:bg-foreground selection:text-background transition-colors duration-300">
       <div className="max-w-3xl mb-12">
         <h1 className="text-4xl font-black tracking-tight mb-2 uppercase sm:text-5xl text-foreground">
           All Products

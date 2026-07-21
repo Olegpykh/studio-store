@@ -11,22 +11,16 @@ import {
 } from '@/lib/wishlist';
 
 export function WishlistSection() {
-  // 1. Инициализируем стейт сразу из localStorage, чтобы избежать лишних перезаписей
   const [products, setProducts] = useState<WishlistItem[]>([]);
 
-  // Защита от гидратации: флаг, показывающий, смонтировался ли компонент на клиенте
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Оборачиваем вызовы setState в макротаску через setTimeout(..., 0).
-    // Это убирает их из синхронного цикла эффекта, делая их асинхронными,
-    // что полностью удовлетворяет строгому правилу линтера.
     const timer = setTimeout(() => {
       setIsMounted(true);
       setProducts(getWishlist());
     }, 0);
 
-    // Подписываемся на события изменения вишлиста
     const handleWishlistUpdate = () => {
       setProducts(getWishlist());
     };
@@ -45,7 +39,6 @@ export function WishlistSection() {
     removeFromWishlist(productId);
   };
 
-  // Пока компонент не смонтирован на клиенте, показываем безопасный лоадер (предотвращает Hydration Mismatch)
   if (!isMounted) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -64,7 +57,7 @@ export function WishlistSection() {
           Your personal vault is empty. No hardware saved.
         </span>
         <Link
-          href="/catalog"
+          href="/products"
           className="inline-flex items-center gap-2 border border-foreground/30 px-4 py-2.5 text-[9px] font-bold tracking-widest uppercase hover:bg-foreground hover:text-background transition-all font-mono"
         >
           Scan Tactical Gear
@@ -98,7 +91,6 @@ export function WishlistSection() {
             key={uniqueKey}
             className="border border-border/85 bg-background/30 p-4 flex gap-4 items-center hover:border-foreground/45 transition-colors relative"
           >
-            {/* Картинка товара */}
             <div className="relative w-16 h-16 bg-zinc-50 dark:bg-zinc-900 border border-border/60 overflow-hidden shrink-0">
               {imageUrl ? (
                 <Image
@@ -115,7 +107,6 @@ export function WishlistSection() {
               )}
             </div>
 
-            {/* Описание товара */}
             <Link
               href={item.handle ? `/products/${item.handle}` : '#'}
               className="flex-1 min-w-0 pr-24 hover:underline decoration-foreground/30"
@@ -133,9 +124,7 @@ export function WishlistSection() {
               </p>
             </Link>
 
-            {/* Контейнер кнопок управления */}
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              {/* Кнопка быстрого удаления */}
               <button
                 onClick={(e) => handleRemove(item.id, e)}
                 className="p-2 text-zinc-400 hover:text-red-500 hover:border-red-500/30 border border-transparent transition-colors cursor-pointer"
@@ -144,7 +133,6 @@ export function WishlistSection() {
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
 
-              {/* Кнопка перехода на страницу товара */}
               {item.handle && (
                 <Link
                   href={`/products/${item.handle}`}

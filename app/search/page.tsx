@@ -5,16 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { Search, Loader2 } from 'lucide-react';
 import { shopifyFetch } from '@/lib/shopify';
 import { SEARCH_PRODUCTS_QUERY } from '@/lib/shopify-queries';
-import { ShopifyProduct } from '@/types/shopify';
+import { ShopifyProduct, ShopifySearchResponse } from '@/types/shopify';
 import { ProductCard } from '@/components/ProductCard';
-
-interface ShopifySearchResponse {
-  products: {
-    edges: {
-      node: ShopifyProduct;
-    }[];
-  };
-}
 
 function SearchContent() {
   const searchParams = useSearchParams();
